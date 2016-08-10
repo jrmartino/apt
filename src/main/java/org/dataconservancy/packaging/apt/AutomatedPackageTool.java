@@ -24,6 +24,8 @@ import java.io.File;
 
 /**
  * Created by jrm on 8/10/16.
+ *
+ * @author jrm
  */
 public class AutomatedPackageTool {
     @Argument(multiValued = false, usage="URL to the registration to be packaged" )
