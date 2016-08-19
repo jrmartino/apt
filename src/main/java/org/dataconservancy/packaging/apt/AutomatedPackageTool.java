@@ -61,10 +61,10 @@ public class AutomatedPackageTool {
 	 * Arguments
 	 */
 	@Argument(required = true, index = 0, metaVar = "[content]", usage = "content root directory")
-    public File contentRootFile = null;
+    private File contentRootFile = null;
 
     @Argument(required = false, index = 1, metaVar = "[profile]", usage = "domain profile file")
-    public File domainProfileFile = null;
+    private File domainProfileFile = null;
 
 	/*
 	 *
@@ -72,19 +72,19 @@ public class AutomatedPackageTool {
 	 */
 	/** Request for help/usage documentation */
 	@Option(name = "-h", aliases = { "-help", "--help" }, usage = "print help message")
-	public boolean help = false;
+	private boolean help = false;
 
 	/** Requests the current version number of the cli application. */
 	@Option(name = "-v", aliases = { "-version", "--version" }, usage = "print version information")
-	public boolean version = false;
+	private boolean version = false;
 
     /** Requests for debugging info. */
 	@Option(name = "-d", aliases = { "-debug", "--debug" }, usage = "print debug information")
-	public boolean debug = false;
+	private boolean debug = false;
 
     /** Requests for parameter info */
     @Option(name = "-i", aliases = { "-info", "--info"}, usage = "print parameter info")
-    public boolean info = false;
+    private boolean info = false;
 
 	/*
 	 *
@@ -92,55 +92,55 @@ public class AutomatedPackageTool {
 	 */
 	/** Packaging format */
 	@Option(name = "-f", aliases = { "--format" }, usage = "packaging format to use")
-	public PackagingFormat pkgFormat = PackagingFormat.BOREM;
+	private PackagingFormat pkgFormat = PackagingFormat.BOREM;
 
 	/** Package Generation Params location */
 	@Option(name = "-g", aliases = { "--generation-params" }, metaVar = "<file>", usage = "package generation params file location")
-	public static File packageGenerationParamsFile;
+	private static File packageGenerationParamsFile;
 
     /** Package Metadata File location */
     @Option(name = "-m", aliases = { "--package-metadata" }, metaVar = "<file>", usage = "package metadata file location")
-	public static File packageMetadataFile;
+	private static File packageMetadataFile;
 
     /** Archive format **/
     @Option(name = "-a", aliases = { "--archiving-format"}, metaVar = "tar|zip", usage = "Archive format to use when creating the package.  Defaults to tar")
-    public String archiveFormat;
+    private String archiveFormat;
 
     /** Compression format for tar archives **/
     @Option(name = "-c", aliases = { "--compression-format"}, metaVar = "gz|none", usage = "Compression format, if archive type is tar.  If not specified, no compression is used.  Ignored if non-tar archive is used.")
-    public String compressionFormat;
+    private String compressionFormat;
 
     /** Checksum algorithms **/
     @Option(name = "-s", aliases = { "--checksum"}, metaVar = "md5|sha1", usage = "Checksum algorithms to use.  If none specified, will use md5.  Can be specified multiple times")
-    public List<String> checksums;
+    private List<String> checksums;
 
     /** Package Name **/
     @Option(name = "-n", aliases = { "--name", "--package-name"}, metaVar = "<name>", usage = "The package name, which also determines the output filename.  Will override value in Package Generation Parameters file.")
-    public static String packageName;
+    private static String packageName;
 
     /** Package output location **/
     @Option(name = "-o", aliases = { "--location", "--output-location"}, metaVar = "<path>", usage = "The output directory to which the package file will be written.  Will override value in Package Generation Parameters file.")
-    public static File outputLocation;
+    private static File outputLocation;
 
     /** Package staging location **/
     @Option(name = "--stage", aliases = { "--staging", "--staging-location", "--package-staging-location"}, metaVar = "<path>", usage = "The directory to which the package will be staged before building.  Will override value in Package Generation Parameters file.")
-    public String packageStagingLocation;
+    private String packageStagingLocation;
 
     /** Force overwrite of target file **/
     @Option(name = "--overwrite", aliases = { "--force" }, usage = "If specified, will overwrite if the destination package file already exists without prompting.")
-    public boolean overwriteIfExists = false;
+    private boolean overwriteIfExists = false;
 
     /** Write to stdout **/
     @Option(name = "--stdout", usage = "Write to stdout, instead of to a file.")
-    public boolean stdout = false;
+    private boolean stdout = false;
 
     /** Serialization Format **/
     @Option(name = "-z", aliases = { "--serialization", "--serialization-format"}, metaVar="JSONLD|TURTLE|XML", usage = "Serialization format for the ORE-ReM file")
-    public String serializationFormat;
+    private String serializationFormat;
 
     /** Rules file **/
     @Option(name = "-r", aliases = {"--rules", "--rules-file"}, metaVar = "<path>", usage = "Thelocation of the rules file")
-    public static File rulesFile;
+    private static File rulesFile;
 
     public static void main(String[] args) {
 
@@ -241,12 +241,12 @@ public class AutomatedPackageTool {
             }
         }
 
-        if (this.packageGenerationParamsFile != null) {
+        if (packageGenerationParamsFile != null) {
             try {
                 PackageGenerationParameters fileParams = parametersBuilder.
-                        buildParameters(new FileInputStream(this.packageGenerationParamsFile));
+                        buildParameters(new FileInputStream(packageGenerationParamsFile));
 
-                System.err.println("Overriding generation parameters with values from " + this.packageGenerationParamsFile + " specified on command line");
+                System.err.println("Overriding generation parameters with values from " + packageGenerationParamsFile + " specified on command line");
                 useDefaults = false;
                 updateCompression(fileParams);
                 packageParams.overrideParams(fileParams);
@@ -257,7 +257,7 @@ public class AutomatedPackageTool {
             }
             if (debug) {
                 log.debug("Parameters resulted from parsing file "
-                        + this.packageGenerationParamsFile.getAbsoluteFile() + ": \n" + packageParams.toString());
+                        + packageGenerationParamsFile.getAbsoluteFile() + ": \n" + packageParams.toString());
             }
         }
 
@@ -358,11 +358,11 @@ public class AutomatedPackageTool {
 
     private LinkedHashMap<String, List<String>> createPackageMetadata(){
         Properties props = new Properties();
-        if(this.packageMetadataFile != null) {
-            if(!this.packageMetadataFile.exists()){
+        if(packageMetadataFile != null) {
+            if(!packageMetadataFile.exists()){
                 throw new PackageToolException(PackagingToolReturnInfo.CMD_LINE_FILE_NOT_FOUND_EXCEPTION);
             }
-            try (InputStream fileStream = new FileInputStream(this.packageMetadataFile)) {
+            try (InputStream fileStream = new FileInputStream(packageMetadataFile)) {
                 props.load(fileStream);
             } catch (FileNotFoundException e) {
                 throw new PackageToolException(PackagingToolReturnInfo.CMD_LINE_FILE_NOT_FOUND_EXCEPTION, e);
